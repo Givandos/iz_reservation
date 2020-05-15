@@ -1,0 +1,1000 @@
+  [1m[35m (183.6ms)[0m  [1m[35mCREATE DATABASE "iz_reservation_development" ENCODING = 'unicode'[0m
+  [1m[35m (64.2ms)[0m  [1m[35mCREATE DATABASE "iz_reservation_test" ENCODING = 'unicode'[0m
+  [1m[35m (18.1ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (20.8ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT pg_try_advisory_lock(4309512303194513205)[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateUsers (20200515143327)
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (8.3ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mprimary::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20200515143327"]]
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateRestaurants (20200515143338)
+  [1m[35m (6.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (13.7ms)[0m  [1m[35mCREATE TABLE "restaurants" ("id" bigserial primary key, "open_time" time NOT NULL, "close_time" time NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mprimary::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20200515143338"]]
+  [1m[35m (0.6ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateTables (20200515143418)
+  [1m[35m (11.6ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (8.8ms)[0m  [1m[35mCREATE TABLE "tables" ("id" bigserial primary key, "restaurant_id" bigint, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_0700cfe41e"
+FOREIGN KEY ("restaurant_id")
+  REFERENCES "restaurants" ("id")
+)[0m
+  [1m[35m (1.1ms)[0m  [1m[35mCREATE  INDEX  "index_tables_on_restaurant_id" ON "tables"  ("restaurant_id")[0m
+  [1m[36mprimary::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20200515143418"]]
+  [1m[35m (0.6ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateOrders (20200515143502)
+  [1m[35m (5.7ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (9.4ms)[0m  [1m[35mCREATE TABLE "orders" ("id" bigserial primary key, "table_id" bigint, "user_id" bigint, "open_reservation_time" timestamp NOT NULL, "close_reservation_time" timestamp NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_aaccb1d5d0"
+FOREIGN KEY ("table_id")
+  REFERENCES "tables" ("id")
+, CONSTRAINT "fk_rails_f868b47f6a"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+)[0m
+  [1m[35m (5.4ms)[0m  [1m[35mCREATE  INDEX  "index_orders_on_table_id" ON "orders"  ("table_id")[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE  INDEX  "index_orders_on_user_id" ON "orders"  ("user_id")[0m
+  [1m[36mprimary::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20200515143502"]]
+  [1m[35m (0.8ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.4ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "development"], ["created_at", "2020-05-15 14:50:13.713002"], ["updated_at", "2020-05-15 14:50:13.713002"]]
+  [1m[35m (6.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT pg_advisory_unlock(4309512303194513205)[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mRestaurant Load (1.8ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" ORDER BY "restaurants"."id" ASC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT pg_try_advisory_lock(4309512303194513205)[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to RenameOrderToReservation (20200515152758)
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "orders" RENAME TO "reservations"[0m
+  [1m[35m (0.4ms)[0m  [1m[35mALTER INDEX "orders_pkey" RENAME TO "reservations_pkey"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "public"."orders_id_seq" RENAME TO "reservations_id_seq"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER INDEX "index_orders_on_table_id" RENAME TO "index_reservations_on_table_id"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mALTER INDEX "index_orders_on_user_id" RENAME TO "index_reservations_on_user_id"[0m
+  [1m[36mprimary::SchemaMigration Create (5.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20200515152758"]]
+  [1m[35m (1.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.4ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT pg_advisory_unlock(4309512303194513205)[0m
+  [1m[35m (0.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Started POST "/" for 127.0.0.1 at 2020-05-15 18:33:06 +0300
+  [1m[35m (0.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  
+ActionController::RoutingError (No route matches [POST] "/"):
+  
+actionpack (6.0.3) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.2) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.2) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3) lib/rails/engine.rb:527:in `call'
+puma (4.3.3) lib/puma/configuration.rb:228:in `call'
+puma (4.3.3) lib/puma/server.rb:682:in `handle_request'
+puma (4.3.3) lib/puma/server.rb:472:in `process_client'
+puma (4.3.3) lib/puma/server.rb:328:in `block in run'
+puma (4.3.3) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 18:33:21 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T15:00:00", "close_reservation_time"=>"2020-10-01T16:00:00"}
+Completed 500 Internal Server Error in 7ms (ActiveRecord: 0.0ms | Allocations: 1524)
+
+
+  
+ArgumentError (Unknown key: :through. Valid keys are: :class_name, :anonymous_class, :foreign_key, :validate, :autosave, :foreign_type, :dependent, :primary_key, :inverse_of, :required, :polymorphic, :touch, :counter_cache, :optional, :default):
+  
+app/models/reservation.rb:7:in `<class:Reservation>'
+app/models/reservation.rb:1:in `<main>'
+app/controllers/reservations_controller.rb:3:in `create'
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 18:35:04 +0300
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T15:00:00", "close_reservation_time"=>"2020-10-01T16:00:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (5.9ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (7.8ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 67ms (Views: 0.3ms | ActiveRecord: 21.8ms | Allocations: 19791)
+
+
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Create (1.0ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at") VALUES ($1, $2) RETURNING "id"[0m  [["created_at", "2020-05-15 15:35:17.231151"], ["updated_at", "2020-05-15 15:35:17.231151"]]
+  [1m[35m (9.9ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mRestaurant Create (0.6ms)[0m  [1m[32mINSERT INTO "restaurants" ("open_time", "close_time", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["open_time", "10:00:00"], ["close_time", "18:00:00"], ["created_at", "2020-05-15 15:35:45.601734"], ["updated_at", "2020-05-15 15:35:45.601734"]]
+  [1m[35m (0.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mRestaurant Create (0.3ms)[0m  [1m[32mINSERT INTO "restaurants" ("open_time", "close_time", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["open_time", "12:00:00"], ["close_time", "02:00:00"], ["created_at", "2020-05-15 15:35:54.944741"], ["updated_at", "2020-05-15 15:35:54.944741"]]
+  [1m[35m (1.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mRestaurant Load (0.2ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTable Create (0.8ms)[0m  [1m[32mINSERT INTO "tables" ("restaurant_id", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["restaurant_id", 1], ["created_at", "2020-05-15 15:36:15.327939"], ["updated_at", "2020-05-15 15:36:15.327939"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mRestaurant Load (0.2ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTable Create (0.3ms)[0m  [1m[32mINSERT INTO "tables" ("restaurant_id", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["restaurant_id", 1], ["created_at", "2020-05-15 15:36:25.687547"], ["updated_at", "2020-05-15 15:36:25.687547"]]
+  [1m[35m (1.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mRestaurant Load (0.2ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mTable Create (0.3ms)[0m  [1m[32mINSERT INTO "tables" ("restaurant_id", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["restaurant_id", 2], ["created_at", "2020-05-15 15:36:30.942230"], ["updated_at", "2020-05-15 15:36:30.942230"]]
+  [1m[35m (5.5ms)[0m  [1m[35mCOMMIT[0m
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 18:36:36 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T15:00:00", "close_reservation_time"=>"2020-10-01T16:00:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.3ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 12ms (Views: 0.1ms | ActiveRecord: 0.9ms | Allocations: 7316)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 18:37:15 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T15:00:00", "close_reservation_time"=>"2020-10-01T16:00:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.2ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mReservation Create (1.7ms)[0m  [1m[32mINSERT INTO "reservations" ("table_id", "user_id", "open_reservation_time", "close_reservation_time", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["table_id", 1], ["user_id", 1], ["open_reservation_time", "2020-10-01 15:00:00"], ["close_reservation_time", "2020-10-01 16:00:00"], ["created_at", "2020-05-15 15:37:15.268794"], ["updated_at", "2020-05-15 15:37:15.268794"]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 201 Created in 39ms (Views: 0.3ms | ActiveRecord: 10.8ms | Allocations: 15223)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 18:54:51 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T15:00:00", "close_reservation_time"=>"2020-10-01T16:00:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.3ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mReservation Create (0.8ms)[0m  [1m[32mINSERT INTO "reservations" ("table_id", "user_id", "open_reservation_time", "close_reservation_time", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["table_id", 1], ["user_id", 1], ["open_reservation_time", "2020-10-01 15:00:00"], ["close_reservation_time", "2020-10-01 16:00:00"], ["created_at", "2020-05-15 15:54:51.132869"], ["updated_at", "2020-05-15 15:54:51.132869"]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[35m (11.0ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 201 Created in 37ms (Views: 0.3ms | ActiveRecord: 12.7ms | Allocations: 14876)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 18:56:33 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T15:00:00", "close_reservation_time"=>"2020-10-01T16:05:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.2ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 37ms (Views: 0.1ms | ActiveRecord: 11.2ms | Allocations: 14344)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 18:56:40 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T15:00:00", "close_reservation_time"=>"2020-10-01T16:29:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.3ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 7ms (Views: 0.1ms | ActiveRecord: 0.8ms | Allocations: 4173)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 18:56:45 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T15:00:00", "close_reservation_time"=>"2020-10-01T16:30:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.3ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mReservation Create (0.4ms)[0m  [1m[32mINSERT INTO "reservations" ("table_id", "user_id", "open_reservation_time", "close_reservation_time", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["table_id", 1], ["user_id", 1], ["open_reservation_time", "2020-10-01 15:00:00"], ["close_reservation_time", "2020-10-01 16:30:00"], ["created_at", "2020-05-15 15:56:45.809023"], ["updated_at", "2020-05-15 15:56:45.809023"]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[35m (5.9ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 201 Created in 13ms (Views: 0.2ms | ActiveRecord: 7.0ms | Allocations: 5116)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 18:56:58 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-02T15:00:00", "close_reservation_time"=>"2020-10-01T16:30:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.2ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 7ms (Views: 0.2ms | ActiveRecord: 0.7ms | Allocations: 4202)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 18:59:17 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-02T15:00:00", "close_reservation_time"=>"2020-10-01T16:30:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.3ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 36ms (Views: 0.1ms | ActiveRecord: 7.7ms | Allocations: 14370)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:11:52 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-02T15:00:00", "close_reservation_time"=>"2020-10-01T16:30:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.3ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.3ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 40ms (Views: 0.1ms | ActiveRecord: 5.5ms | Allocations: 19141)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:11:53 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-02T15:00:00", "close_reservation_time"=>"2020-10-01T16:30:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.2ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.3ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 8ms (Views: 0.1ms | ActiveRecord: 1.0ms | Allocations: 5112)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:11:57 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T15:00:00", "close_reservation_time"=>"2020-10-01T16:30:00"}
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.3ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.3ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[36mReservation Create (1.2ms)[0m  [1m[32mINSERT INTO "reservations" ("table_id", "user_id", "open_reservation_time", "close_reservation_time", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["table_id", 1], ["user_id", 1], ["open_reservation_time", "2020-10-01 15:00:00"], ["close_reservation_time", "2020-10-01 16:30:00"], ["created_at", "2020-05-15 16:11:57.170805"], ["updated_at", "2020-05-15 16:11:57.170805"]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[35m (6.5ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 201 Created in 19ms (Views: 0.2ms | ActiveRecord: 8.7ms | Allocations: 6023)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:12:03 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T09:00:00", "close_reservation_time"=>"2020-10-01T16:30:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.5ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.2ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 9ms (Views: 0.1ms | ActiveRecord: 1.2ms | Allocations: 5078)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:12:05 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T09:00:00", "close_reservation_time"=>"2020-10-01T16:30:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.6ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.7ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[35m (0.3ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 13ms (Views: 0.1ms | ActiveRecord: 2.1ms | Allocations: 5078)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:12:11 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T10:00:00", "close_reservation_time"=>"2020-10-01T16:30:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.2ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.3ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[36mReservation Create (0.6ms)[0m  [1m[32mINSERT INTO "reservations" ("table_id", "user_id", "open_reservation_time", "close_reservation_time", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["table_id", 1], ["user_id", 1], ["open_reservation_time", "2020-10-01 10:00:00"], ["close_reservation_time", "2020-10-01 16:30:00"], ["created_at", "2020-05-15 16:12:11.032407"], ["updated_at", "2020-05-15 16:12:11.032407"]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[35m (5.8ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 201 Created in 15ms (Views: 0.3ms | ActiveRecord: 7.2ms | Allocations: 5969)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:12:22 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T01:00:00", "close_reservation_time"=>"2020-10-01T16:30:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.2ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.2ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 13ms (Views: 0.1ms | ActiveRecord: 0.8ms | Allocations: 5079)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:12:29 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T01:00:00", "close_reservation_time"=>"2020-10-01T02:00:00"}
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (1.8ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.2ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 12ms (Views: 0.2ms | ActiveRecord: 2.5ms | Allocations: 5078)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:12:30 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T01:00:00", "close_reservation_time"=>"2020-10-01T02:00:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.1ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.2ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 7ms (Views: 0.1ms | ActiveRecord: 0.8ms | Allocations: 5079)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:12:31 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T01:00:00", "close_reservation_time"=>"2020-10-01T02:00:00"}
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.2ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.5ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[35m (1.5ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 12ms (Views: 0.1ms | ActiveRecord: 3.0ms | Allocations: 5078)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:12:33 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T01:00:00", "close_reservation_time"=>"2020-10-01T02:00:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.1ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.2ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 7ms (Views: 0.1ms | ActiveRecord: 0.7ms | Allocations: 5078)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:12:35 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T01:00:00", "close_reservation_time"=>"2020-10-01T02:00:00"}
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.3ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.7ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[35m (0.8ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 11ms (Views: 0.1ms | ActiveRecord: 2.1ms | Allocations: 5078)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:12:36 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T01:00:00", "close_reservation_time"=>"2020-10-01T02:00:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.2ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.2ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 8ms (Views: 0.2ms | ActiveRecord: 0.8ms | Allocations: 5078)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:13:15 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T01:00:00", "close_reservation_time"=>"2020-10-01T02:00:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.2ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.1ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 500 Internal Server Error in 45ms (ActiveRecord: 12.2ms | Allocations: 19475)
+
+
+  
+NoMethodError (undefined method `pry' for #<Binding:0x00007fd002321610>
+Did you mean?  try):
+  
+app/models/table.rb:11:in `available?'
+app/models/reservation.rb:44:in `table_availability'
+app/controllers/reservations_controller.rb:3:in `create'
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:13:23 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T01:00:00", "close_reservation_time"=>"2020-10-01T02:00:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.1ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.2ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[35m (0.6ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 500 Internal Server Error in 14788ms (ActiveRecord: 14.6ms | Allocations: 104852)
+
+
+  
+SystemExit (exit):
+  
+(byebug):1:in `exit'
+(byebug):1:in `available?'
+app/models/table.rb:12:in `available?'
+app/models/reservation.rb:44:in `table_availability'
+app/controllers/reservations_controller.rb:3:in `create'
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:13:51 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"3", "open_reservation_time"=>"2020-10-01T01:00:00", "close_reservation_time"=>"2020-10-01T02:00:00"}
+  [1m[35m (0.7ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.7ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.7ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[35m (2.1ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 462ms (Views: 1.6ms | ActiveRecord: 25.2ms | Allocations: 3642235)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:13:58 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"3", "open_reservation_time"=>"2020-10-01T01:00:00", "close_reservation_time"=>"2020-10-01T02:00:00"}
+  [1m[35m (0.7ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (2.5ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.8ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[35m (14.9ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 500 Internal Server Error in 222125ms (ActiveRecord: 38.0ms | Allocations: 4126783)
+
+
+  
+SystemExit (exit):
+  
+(byebug):1:in `exit'
+(byebug):1:in `available?'
+app/models/table.rb:12:in `available?'
+app/models/reservation.rb:44:in `table_availability'
+app/controllers/reservations_controller.rb:3:in `create'
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:17:47 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"3", "open_reservation_time"=>"2020-10-01T01:00:00", "close_reservation_time"=>"2020-10-01T02:00:00"}
+  [1m[35m (0.9ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (1.0ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (2.7ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[36mReservation Create (1.5ms)[0m  [1m[32mINSERT INTO "reservations" ("table_id", "user_id", "open_reservation_time", "close_reservation_time", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["table_id", 3], ["user_id", 1], ["open_reservation_time", "2020-10-01 01:00:00"], ["close_reservation_time", "2020-10-01 02:00:00"], ["created_at", "2020-05-15 16:17:49.501307"], ["updated_at", "2020-05-15 16:17:49.501307"]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[35m (1.2ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 201 Created in 602ms (Views: 5.5ms | ActiveRecord: 27.2ms | Allocations: 5412590)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:18:03 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"3", "open_reservation_time"=>"2020-10-01T03:00:00", "close_reservation_time"=>"2020-10-01T05:00:00"}
+  [1m[35m (2.7ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.9ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (1.0ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[35m (1.0ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 170ms (Views: 3.5ms | ActiveRecord: 6.5ms | Allocations: 1650536)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:18:10 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"3", "open_reservation_time"=>"2020-10-01T10:00:00", "close_reservation_time"=>"2020-10-01T12:00:00"}
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (1.1ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.8ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[35m (0.8ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 165ms (Views: 1.9ms | ActiveRecord: 4.7ms | Allocations: 1648531)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:18:16 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"3", "open_reservation_time"=>"2020-10-01T13:00:00", "close_reservation_time"=>"2020-10-01T15:00:00"}
+  [1m[35m (0.9ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.9ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (1.1ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[36mReservation Create (1.3ms)[0m  [1m[32mINSERT INTO "reservations" ("table_id", "user_id", "open_reservation_time", "close_reservation_time", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["table_id", 3], ["user_id", 1], ["open_reservation_time", "2020-10-01 13:00:00"], ["close_reservation_time", "2020-10-01 15:00:00"], ["created_at", "2020-05-15 16:18:16.251430"], ["updated_at", "2020-05-15 16:18:16.251430"]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[35m (1.8ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 201 Created in 204ms (Views: 8.1ms | ActiveRecord: 7.0ms | Allocations: 1939178)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:18:25 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"3", "open_reservation_time"=>"2020-10-01T22:00:00", "close_reservation_time"=>"2020-10-01T24:00:00"}
+  [1m[35m (1.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (4.0ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (1.0ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[36mReservation Create (3.4ms)[0m  [1m[32mINSERT INTO "reservations" ("table_id", "user_id", "open_reservation_time", "close_reservation_time", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["table_id", 3], ["user_id", 1], ["open_reservation_time", "2020-10-01 22:00:00"], ["close_reservation_time", "2020-10-02 00:00:00"], ["created_at", "2020-05-15 16:18:25.996114"], ["updated_at", "2020-05-15 16:18:25.996114"]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[35m (2.2ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 201 Created in 256ms (Views: 6.2ms | ActiveRecord: 12.6ms | Allocations: 1937049)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:18:40 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"3", "open_reservation_time"=>"2020-10-01T23:00:00", "close_reservation_time"=>"2020-10-02T01:00:00"}
+  [1m[35m (0.8ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (1.2ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (1.3ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[36mReservation Create (1.3ms)[0m  [1m[32mINSERT INTO "reservations" ("table_id", "user_id", "open_reservation_time", "close_reservation_time", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["table_id", 3], ["user_id", 1], ["open_reservation_time", "2020-10-01 23:00:00"], ["close_reservation_time", "2020-10-02 01:00:00"], ["created_at", "2020-05-15 16:18:40.318707"], ["updated_at", "2020-05-15 16:18:40.318707"]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[35m (3.1ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 201 Created in 204ms (Views: 7.8ms | ActiveRecord: 8.7ms | Allocations: 1939121)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:18:46 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"3", "open_reservation_time"=>"2020-10-01T23:00:00", "close_reservation_time"=>"2020-10-02T04:00:00"}
+  [1m[35m (0.9ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (1.0ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (1.0ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/models/table.rb:9:in `available?'
+  [1m[35m (1.0ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 171ms (Views: 2.4ms | ActiveRecord: 4.8ms | Allocations: 1532109)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:25:39 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"3", "open_reservation_time"=>"2020-10-01T23:00:00", "close_reservation_time"=>"2020-10-02T04:00:00"}
+  [1m[35m (1.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (1.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (1.3ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (1.2ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/models/table.rb:10:in `available?'
+  [1m[35m (1.0ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 614ms (Views: 4.1ms | ActiveRecord: 6.5ms | Allocations: 5503516)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:25:44 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"3", "open_reservation_time"=>"2020-10-01T23:00:00", "close_reservation_time"=>"2020-10-02T04:00:00"}
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (1.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (1.0ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (2.5ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/models/table.rb:10:in `available?'
+  [1m[35m (0.9ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 177ms (Views: 4.2ms | ActiveRecord: 6.5ms | Allocations: 1653910)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:25:50 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"3", "open_reservation_time"=>"2020-10-01T23:00:00", "close_reservation_time"=>"2020-10-02T01:00:00"}
+  [1m[35m (0.9ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (1.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (1.0ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (1.1ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/models/table.rb:10:in `available?'
+  [1m[36mReservation Exists? (1.5ms)[0m  [1m[34mSELECT 1 AS one FROM "reservations" WHERE "reservations"."table_id" = $1 AND "reservations"."id" = $2 LIMIT $3[0m  [["table_id", 3], ["id", nil], ["LIMIT", 1]]
+  ↳ app/models/table.rb:21:in `available?'
+  [1m[36mReservation Create (3.8ms)[0m  [1m[32mINSERT INTO "reservations" ("table_id", "user_id", "open_reservation_time", "close_reservation_time", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["table_id", 3], ["user_id", 1], ["open_reservation_time", "2020-10-01 23:00:00"], ["close_reservation_time", "2020-10-02 01:00:00"], ["created_at", "2020-05-15 16:25:51.200235"], ["updated_at", "2020-05-15 16:25:51.200235"]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[35m (1.9ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mReservation Exists? (1.4ms)[0m  [1m[34mSELECT 1 AS one FROM "reservations" WHERE "reservations"."table_id" = $1 AND "reservations"."id" = $2 LIMIT $3[0m  [["table_id", 3], ["id", nil], ["LIMIT", 1]]
+  ↳ app/models/table.rb:21:in `available?'
+Completed 201 Created in 306ms (Views: 7.6ms | ActiveRecord: 12.6ms | Allocations: 2731002)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:25:52 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"3", "open_reservation_time"=>"2020-10-01T23:00:00", "close_reservation_time"=>"2020-10-02T01:00:00"}
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (1.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (21.1ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (1.0ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/models/table.rb:10:in `available?'
+  [1m[36mReservation Exists? (3.2ms)[0m  [1m[34mSELECT 1 AS one FROM "reservations" WHERE "reservations"."table_id" = $1 AND "reservations"."id" = $2 LIMIT $3[0m  [["table_id", 3], ["id", nil], ["LIMIT", 1]]
+  ↳ app/models/table.rb:21:in `available?'
+  [1m[36mReservation Create (1.4ms)[0m  [1m[32mINSERT INTO "reservations" ("table_id", "user_id", "open_reservation_time", "close_reservation_time", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["table_id", 3], ["user_id", 1], ["open_reservation_time", "2020-10-01 23:00:00"], ["close_reservation_time", "2020-10-02 01:00:00"], ["created_at", "2020-05-15 16:25:52.593281"], ["updated_at", "2020-05-15 16:25:52.593281"]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[35m (1.7ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mReservation Exists? (2.7ms)[0m  [1m[34mSELECT 1 AS one FROM "reservations" WHERE "reservations"."table_id" = $1 AND "reservations"."id" = $2 LIMIT $3[0m  [["table_id", 3], ["id", nil], ["LIMIT", 1]]
+  ↳ app/models/table.rb:21:in `available?'
+Completed 201 Created in 367ms (Views: 8.3ms | ActiveRecord: 33.2ms | Allocations: 2631158)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:26:05 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"3", "open_reservation_time"=>"2020-10-01T23:00:00", "close_reservation_time"=>"2020-10-02T01:00:00"}
+  [1m[35m (2.9ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (1.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (1.2ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (1.2ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/models/table.rb:10:in `available?'
+  [1m[36mReservation Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "reservations" WHERE "reservations"."table_id" = $1 AND "reservations"."id" = $2 LIMIT $3[0m  [["table_id", 3], ["id", nil], ["LIMIT", 1]]
+  ↳ (byebug):1:in `available?'
+  [1m[35m (1.1ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 500 Internal Server Error in 26767ms (ActiveRecord: 35.6ms | Allocations: 5628186)
+
+
+  
+SystemExit (exit):
+  
+(byebug):1:in `exit'
+(byebug):1:in `available?'
+app/models/table.rb:22:in `available?'
+app/models/reservation.rb:44:in `table_availability'
+app/controllers/reservations_controller.rb:3:in `create'
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:26:38 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"3", "open_reservation_time"=>"2020-10-01T23:00:00", "close_reservation_time"=>"2020-10-02T01:00:00"}
+  [1m[35m (1.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (1.0ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (2.7ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/models/table.rb:10:in `available?'
+  [1m[36mReservation Exists? (1.1ms)[0m  [1m[34mSELECT 1 AS one FROM "reservations" WHERE "reservations"."table_id" = $1 AND "reservations"."id" = $2 LIMIT $3[0m  [["table_id", 3], ["id", nil], ["LIMIT", 1]]
+  ↳ app/models/table.rb:21:in `available?'
+  [1m[36mReservation Create (1.3ms)[0m  [1m[32mINSERT INTO "reservations" ("table_id", "user_id", "open_reservation_time", "close_reservation_time", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["table_id", 3], ["user_id", 1], ["open_reservation_time", "2020-10-01 23:00:00"], ["close_reservation_time", "2020-10-02 01:00:00"], ["created_at", "2020-05-15 16:26:40.384902"], ["updated_at", "2020-05-15 16:26:40.384902"]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[35m (1.9ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mReservation Exists? (2.8ms)[0m  [1m[34mSELECT 1 AS one FROM "reservations" WHERE "reservations"."table_id" = $1 AND "reservations"."id" = $2 LIMIT $3[0m  [["table_id", 3], ["id", nil], ["LIMIT", 1]]
+  ↳ app/models/table.rb:21:in `available?'
+Completed 201 Created in 716ms (Views: 7.5ms | ActiveRecord: 33.2ms | Allocations: 6815370)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:26:41 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"3", "open_reservation_time"=>"2020-10-01T23:00:00", "close_reservation_time"=>"2020-10-02T01:00:00"}
+  [1m[35m (1.3ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (32.2ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (1.2ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/models/table.rb:10:in `available?'
+  [1m[36mReservation Exists? (1.2ms)[0m  [1m[34mSELECT 1 AS one FROM "reservations" WHERE "reservations"."table_id" = $1 AND "reservations"."id" = $2 LIMIT $3[0m  [["table_id", 3], ["id", nil], ["LIMIT", 1]]
+  ↳ app/models/table.rb:21:in `available?'
+  [1m[36mReservation Create (1.4ms)[0m  [1m[32mINSERT INTO "reservations" ("table_id", "user_id", "open_reservation_time", "close_reservation_time", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["table_id", 3], ["user_id", 1], ["open_reservation_time", "2020-10-01 23:00:00"], ["close_reservation_time", "2020-10-02 01:00:00"], ["created_at", "2020-05-15 16:26:41.954390"], ["updated_at", "2020-05-15 16:26:41.954390"]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[35m (2.1ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mReservation Exists? (1.7ms)[0m  [1m[34mSELECT 1 AS one FROM "reservations" WHERE "reservations"."table_id" = $1 AND "reservations"."id" = $2 LIMIT $3[0m  [["table_id", 3], ["id", nil], ["LIMIT", 1]]
+  ↳ app/models/table.rb:21:in `available?'
+Completed 201 Created in 329ms (Views: 7.0ms | ActiveRecord: 41.9ms | Allocations: 2636648)
+
+
+  [1m[35m (0.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1[0m  [["key", "environment"]]
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1[0m  [["key", "environment"]]
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1[0m  [["key", "environment"]]
+  [1m[35m (8241.0ms)[0m  [1m[35mDROP DATABASE IF EXISTS "iz_reservation_development"[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1[0m  [["key", "environment"]]
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1[0m  [["key", "environment"]]
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1[0m  [["key", "environment"]]
+  [1m[35m (8543.0ms)[0m  [1m[35mDROP DATABASE IF EXISTS "iz_reservation_development"[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1[0m  [["key", "environment"]]
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1[0m  [["key", "environment"]]
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1[0m  [["key", "environment"]]
+  [1m[35m (38.4ms)[0m  [1m[35mDROP DATABASE IF EXISTS "iz_reservation_development"[0m
+  [1m[35m (50.7ms)[0m  [1m[35mDROP DATABASE IF EXISTS "iz_reservation_test"[0m
+  [1m[35m (162.0ms)[0m  [1m[35mCREATE DATABASE "iz_reservation_development" ENCODING = 'unicode'[0m
+  [1m[35m (63.7ms)[0m  [1m[35mCREATE DATABASE "iz_reservation_test" ENCODING = 'unicode'[0m
+  [1m[35m (11.6ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (15.8ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT pg_try_advisory_lock(4309512303194513205)[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateUsers (20200515143327)
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (8.4ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mprimary::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20200515143327"]]
+  [1m[35m (0.6ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateRestaurants (20200515143338)
+  [1m[35m (5.9ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (7.5ms)[0m  [1m[35mCREATE TABLE "restaurants" ("id" bigserial primary key, "open_time" time NOT NULL, "close_time" time NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mprimary::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20200515143338"]]
+  [1m[35m (6.5ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateTables (20200515143418)
+  [1m[35m (5.6ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (9.0ms)[0m  [1m[35mCREATE TABLE "tables" ("id" bigserial primary key, "restaurant_id" bigint, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_0700cfe41e"
+FOREIGN KEY ("restaurant_id")
+  REFERENCES "restaurants" ("id")
+)[0m
+  [1m[35m (6.7ms)[0m  [1m[35mCREATE  INDEX  "index_tables_on_restaurant_id" ON "tables"  ("restaurant_id")[0m
+  [1m[36mprimary::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20200515143418"]]
+  [1m[35m (0.6ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateReservations (20200515143502)
+  [1m[35m (6.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (8.3ms)[0m  [1m[35mCREATE TABLE "reservations" ("id" bigserial primary key, "table_id" bigint, "user_id" bigint, "open_time" timestamp NOT NULL, "close_time" timestamp NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_23ce71128d"
+FOREIGN KEY ("table_id")
+  REFERENCES "tables" ("id")
+, CONSTRAINT "fk_rails_48a92fce51"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+)[0m
+  [1m[35m (6.7ms)[0m  [1m[35mCREATE  INDEX  "index_reservations_on_table_id" ON "reservations"  ("table_id")[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE  INDEX  "index_reservations_on_user_id" ON "reservations"  ("user_id")[0m
+  [1m[36mprimary::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20200515143502"]]
+  [1m[35m (0.9ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.3ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.5ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "development"], ["created_at", "2020-05-15 16:30:56.621747"], ["updated_at", "2020-05-15 16:30:56.621747"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT pg_advisory_unlock(4309512303194513205)[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Create (0.6ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at") VALUES ($1, $2) RETURNING "id"[0m  [["created_at", "2020-05-15 16:31:04.504291"], ["updated_at", "2020-05-15 16:31:04.504291"]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mRestaurant Create (0.6ms)[0m  [1m[32mINSERT INTO "restaurants" ("open_time", "close_time", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["open_time", "10:00:00"], ["close_time", "18:00:00"], ["created_at", "2020-05-15 16:31:26.884543"], ["updated_at", "2020-05-15 16:31:26.884543"]]
+  [1m[35m (1.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mRestaurant Load (0.3ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTable Create (0.7ms)[0m  [1m[32mINSERT INTO "tables" ("restaurant_id", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["restaurant_id", 1], ["created_at", "2020-05-15 16:31:42.310158"], ["updated_at", "2020-05-15 16:31:42.310158"]]
+  [1m[35m (6.0ms)[0m  [1m[35mCOMMIT[0m
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:31:57 +0300
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_reservation_time"=>"2020-10-01T23:00:00", "close_reservation_time"=>"2020-10-02T01:00:00"}
+[31mUnpermitted parameters: :open_reservation_time, :close_reservation_time[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.3ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 500 Internal Server Error in 41ms (ActiveRecord: 9.7ms | Allocations: 18995)
+
+
+  
+NoMethodError (undefined method `>' for nil:NilClass):
+  
+app/models/reservation.rb:19:in `close_time_after_open_time'
+app/controllers/reservations_controller.rb:3:in `create'
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:32:31 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_time"=>"2020-10-01T23:00:00", "close_time"=>"2020-10-02T01:00:00"}
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (2.2ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.4ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/models/table.rb:10:in `available?'
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 37ms (Views: 0.3ms | ActiveRecord: 7.2ms | Allocations: 10390)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:32:33 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_time"=>"2020-10-01T23:00:00", "close_time"=>"2020-10-02T01:00:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.3ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.3ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/models/table.rb:10:in `available?'
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 8ms (Views: 0.2ms | ActiveRecord: 1.1ms | Allocations: 5101)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:32:40 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_time"=>"2020-10-01T15:00:00", "close_time"=>"2020-10-02T16:00:00"}
+  [1m[35m (5.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (1.5ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.7ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/models/table.rb:10:in `available?'
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 19ms (Views: 0.2ms | ActiveRecord: 7.8ms | Allocations: 5101)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:32:41 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_time"=>"2020-10-01T15:00:00", "close_time"=>"2020-10-02T16:00:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.4ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (0.2ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/models/table.rb:10:in `available?'
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+Completed 422 Unprocessable Entity in 8ms (Views: 0.1ms | ActiveRecord: 1.1ms | Allocations: 5083)
+
+
+Started POST "/reservations" for 127.0.0.1 at 2020-05-15 19:32:46 +0300
+Processing by ReservationsController#create as */*
+  Parameters: {"user_id"=>"1", "table_id"=>"1", "open_time"=>"2020-10-01T15:00:00", "close_time"=>"2020-10-01T16:00:00"}
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mUser Load (1.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mTable Load (0.5ms)[0m  [1m[34mSELECT "tables".* FROM "tables" WHERE "tables"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mRestaurant Load (1.2ms)[0m  [1m[34mSELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/models/table.rb:10:in `available?'
+  [1m[36mReservation Exists? (1.0ms)[0m  [1m[34mSELECT 1 AS one FROM "reservations" WHERE "reservations"."table_id" = $1 AND "reservations"."id" = $2 LIMIT $3[0m  [["table_id", 1], ["id", nil], ["LIMIT", 1]]
+  ↳ app/models/table.rb:21:in `available?'
+  [1m[36mReservation Create (7.2ms)[0m  [1m[32mINSERT INTO "reservations" ("table_id", "user_id", "open_time", "close_time", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["table_id", 1], ["user_id", 1], ["open_time", "2020-10-01 15:00:00"], ["close_time", "2020-10-01 16:00:00"], ["created_at", "2020-05-15 16:32:46.244575"], ["updated_at", "2020-05-15 16:32:46.244575"]]
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[35m (5.6ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/reservations_controller.rb:3:in `create'
+  [1m[36mReservation Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "reservations" WHERE "reservations"."table_id" = $1 AND "reservations"."id" = $2 LIMIT $3[0m  [["table_id", 1], ["id", nil], ["LIMIT", 1]]
+  ↳ app/models/table.rb:21:in `available?'
+Completed 201 Created in 36ms (Views: 0.3ms | ActiveRecord: 17.3ms | Allocations: 8452)
+
+
